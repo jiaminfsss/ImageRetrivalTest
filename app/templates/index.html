@@ -14,10 +14,8 @@
     <div></div>
     <header>
         <div class="container" style="margin-top: 183px;">
-            <div class="row">
-                <div class="col">
-                    <h1 class="text-center" style="color: var(--bs-gray-500);">智能图像搜索引擎</h1>
-                </div>
+            <div class="row">    
+                <h1 class="text-center" style="color: var(--bs-gray-500);">智能图像搜索引擎</h1>
             </div>
             <div class="row">
                 <div class="col text-center">
@@ -31,10 +29,17 @@
                             	<form>
                             		<input type="image" name="image">
                             	</form>
-                                <p><input type="text" placeholder="请输入搜索关键词" style="height: 38px;padding-top: 0px;padding-bottom: 4px;"><button class="btn btn-primary" type="button" style="background: var(--bs-gray-800);border-color: var(--bs-gray-dark);letter-spacing: 0px;">搜索</button></p>
+                                <form action="{{url_for('searchByText')}}" method="post">
+                                    <input type="text" name="searchText" placeholder="请输入搜索关键词" style="height: 38px;padding-top: 0px;padding-bottom: 4px;">
+                                    <input class="btn btn-primary" type="submit" value="搜索" style="background: var(--bs-gray-800);border-color: var(--bs-gray-dark);letter-spacing: 0px;">
+                                </form>
                             </div>
                             <div class="tab-pane active" role="tabpanel" id="tab-4">
-                                <p style="color: var(--bs-gray-500);">当前上传的图片为：<input type="text" placeholder="请上传图片" style="height: 38px;padding-top: 0px;padding-bottom: 4px;" disabled="" readonly=""><button class="btn btn-primary" type="button" style="background: var(--bs-gray-dark);border-color: var(--bs-gray-dark);">上传图片</button><button class="btn btn-primary" type="button" style="background: var(--bs-gray-dark);border-color: var(--bs-gray-dark);">搜索</button></p>
+                                <p style="color: var(--bs-gray-500);">当前上传的图片为：
+                                    <input type="text" placeholder="请上传图片" style="height: 38px;padding-top: 0px;padding-bottom: 4px;" disabled="" readonly="">
+                                    <button class="btn btn-primary" type="button" style="background: var(--bs-gray-dark);border-color: var(--bs-gray-dark);">上传图片</button>
+                                    <button class="btn btn-primary" type="button" style="background: var(--bs-gray-dark);border-color: var(--bs-gray-dark);">搜索</button>
+                                </p>
                             </div>
                         </div>
                     </div>
