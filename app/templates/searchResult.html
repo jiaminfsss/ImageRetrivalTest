@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>index1</title>
+    <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css">
+    <script src="/static/bootstrap/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <style>
+        <!--代码部分-->
+        #container{
+            -webkit-column-width:354px; /*Safari and Chrome*/
+            -moz-column-width:354px; /*Firefox*/
+            -o-column-width:354px; /*Opera*/
+            -ms-column-width:354px; /*IE*/
+            column-width:354px;
+        }
+        #container>div{
+            width:354px; /*宽度根据实际情况调节，应与上面一致*/
+            overflow:auto; /*防止内容溢出导致布局错位*/
+        }
+    </style>
+</head>
+
+<body style="background: url(&quot;/static/img/Three_Kingdoms_1.jpg&quot;);">  
+    <div class="container-fluid">
+        <div class="row">    
+            <h1 class="text-center" style="color: var(--bs-gray-500);">智能图像搜索引擎</h1>
+        </div>
+        <div class="row">
+            <div class="col text-center">
+                <div>
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li class="nav-item" role="presentation"><a class="nav-link active" role="tab" data-bs-toggle="tab" href="#tab-3" style="color: var(--bs-gray-500);">以文搜图</a></li>
+                        <li class="nav-item" role="presentation"><a class="nav-link" role="tab" data-bs-toggle="tab" href="#tab-4" style="color: var(--bs-gray-500);">以图搜图</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" role="tabpanel" id="tab-3">
+                            <form action="{{url_for('searchByText')}}" method="post">
+                                <input type="text" name="searchText" placeholder="请输入搜索关键词" style="height: 38px;padding-top: 0px;padding-bottom: 4px;">
+                                <input class="btn btn-primary" type="submit" value="搜索" style="background: var(--bs-gray-800);border-color: var(--bs-gray-dark);letter-spacing: 0px;">
+                            </form>
+                        </div>
+                        <div class="tab-pane" role="tabpanel" id="tab-4">
+                            <p style="color: var(--bs-gray-500);">当前上传的图片为：
+                                <input type="text" placeholder="请上传图片" style="height: 38px;padding-top: 0px;padding-bottom: 4px;" disabled="" readonly="">
+                                <button class="btn btn-primary" type="button" style="background: var(--bs-gray-dark);border-color: var(--bs-gray-dark);">上传图片</button>
+                                <button class="btn btn-primary" type="button" style="background: var(--bs-gray-dark);border-color: var(--bs-gray-dark);">搜索</button>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="dataid" text="{{searchText}}" port="{{communicatePort}}"></div>
+    
+    <div id="imageZone" class="container">
+        这里是空白的………………
+    </div>
+    <div>
+        <script>
+            document.write("当前搜索的关键词为："+
+            document.getElementById("dataid").getAttribute('text')+
+            "当前通信端口为："+
+            document.getElementById('dataid').getAttribute('port')
+            )
+        </script>
+    </div>
+    <div class="container-fluid">
+        <div class="row" id="container">
+            <!--><div class="col" id="container">
+
+            </div>
+            <-->
+        </div>
+    </div>
+    <script>
+
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                resultArr = JSON.parse(this.responseText);
+                document.getElementById("container").innerHTML = "";
+                //document.getElementById("demo").innerHTML += "<div class='row'>";
+                
+                for (var i=0,len=resultArr.length; i<len; i++){
+                    /*if (count == 0){
+                        document.getElementById("demo").innerHTML += "<div class='row'>";
+                    }*/
+                    document.getElementById("container").innerHTML += "<div class='col-4'><div class='thumbnail'><img src='/getImage/"
+                        +resultArr[i]
+                        +"' class='img-responsive img-thumbnail'></div></div>";
+                    /*count++;
+                    if (count == 3){
+                        document.getElementById("demo").innerHTML += "</div>";
+                        count = 0;
+                    }*/
+
+                }
+                //document.getElementById("demo").innerHTML += "</div>"
+            }
+        };
+        <!--
+            xmlhttp.open("GET", "/getResult/"+
+            document.getElementById("dataid").getAttribute('text')+
+            document.getElementById('dataid').getAttribute('port')+
+            ".json", true);
+            xmlhttp.send();  
+        -->
+        xmlhttp.open("GET", "/getResult/"+
+        document.getElementById("dataid").getAttribute('text')+
+        "38428"+
+        ".json", true);
+        xmlhttp.send();
+
+
+    </script>
+</body>
