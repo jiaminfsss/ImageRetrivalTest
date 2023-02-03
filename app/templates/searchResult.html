@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css">
     <script src="/static/bootstrap/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="/static/css/styles.css">
+    <meta http-equiv="X-UA-Compatible" content="IE-edge,chrome=1">
     <style>
         <!--代码部分-->
         #container{
@@ -21,6 +22,8 @@
             width:354px; /*宽度根据实际情况调节，应与上面一致*/
             overflow:auto; /*防止内容溢出导致布局错位*/
         }
+        
+         
     </style>
 </head>
 
@@ -71,50 +74,28 @@
     </div>
     <div class="container-fluid">
         <div class="row" id="container">
-            <!--><div class="col" id="container">
-
-            </div>
-            <-->
         </div>
     </div>
-    <script>
-
-        var xmlhttp = new XMLHttpRequest();
-        xmlhttp.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
-                resultArr = JSON.parse(this.responseText);
-                document.getElementById("container").innerHTML = "";
-                //document.getElementById("demo").innerHTML += "<div class='row'>";
-                
-                for (var i=0,len=resultArr.length; i<len; i++){
-                    /*if (count == 0){
-                        document.getElementById("demo").innerHTML += "<div class='row'>";
-                    }*/
-                    document.getElementById("container").innerHTML += "<div class='col-4'><div class='thumbnail'><img src='/getImage/"
-                        +resultArr[i]
-                        +"' class='img-responsive img-thumbnail'></div></div>";
-                    /*count++;
-                    if (count == 3){
-                        document.getElementById("demo").innerHTML += "</div>";
-                        count = 0;
-                    }*/
-
+    <script type="text/javascript">
+        onload = function myfunction(){
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    resultArr = JSON.parse(this.responseText);
+                    document.getElementById("container").innerHTML = "";
+                    for (var i=0,len=resultArr.length; i<len; i++){
+                        document.getElementById("container").innerHTML += "<div class='col-4'><div class='thumbnail'><img src='/getImage/"
+                            +resultArr[i]
+                            +"' class='img-responsive img-thumbnail'></div></div>";
+                    }
                 }
-                //document.getElementById("demo").innerHTML += "</div>"
-            }
-        };
-        <!--
+            };
             xmlhttp.open("GET", "/getResult/"+
             document.getElementById("dataid").getAttribute('text')+
-            document.getElementById('dataid').getAttribute('port')+
+            document.getElementById("dataid").getAttribute('port')+
             ".json", true);
-            xmlhttp.send();  
-        -->
-        xmlhttp.open("GET", "/getResult/"+
-        document.getElementById("dataid").getAttribute('text')+
-        "38428"+
-        ".json", true);
-        xmlhttp.send();
+            xmlhttp.send();
+    }
 
 
     </script>

@@ -40,8 +40,9 @@ while (1):
     text_features = model.encode_text(text)
     imageList = getImage(imagePath)#得到图片库中的图片List
     
+    '''
     with open("/home/fusong/DataImage/searchBTResult/"
-              +searchText+str(clientAddr[1])+".json", 'a') as f:
+              +searchText+str(clientAddr[1])+".json", 'w') as f:
         f.write("[")
         count = 0
         for i in imageList:
@@ -59,5 +60,22 @@ while (1):
                         count = 1
         f.write(" ]")
         f.close()
+        '''
+    imageResultList=[]
+    for i in imageList:
+        image = preprocess(Image.open(imagePath+i)).unsqueeze(0).to(device)
+        with torch.no_grad():
+            image_features = model.encode_image(image)
+            logits_per_image, logits_per_text = model(image, text)
+            probs = logits_per_image.softmax(dim=-1).cpu().numpy()
+            if (probs[0][0]>0.8):
+                print("Label of image "+i+" probs:", probs[0][0])
+                imageResultList.append(i)
+    imageResultList_json = json.dumps(imageResultList,ensure_ascii=False)
+    with open("/home/fusong/DataImage/searchBTResult/"
+              +searchText+str(clientAddr[1])+".json", 'w') as f:
+        f.write(imageResultList_json)
+                    
+        
     
 

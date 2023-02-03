@@ -1,6 +1,8 @@
 from flask import Flask, render_template, request, send_from_directory, send_file, json, jsonify, make_response
 import requests
 from socket import *
+import os
+import time
 
 sendPort = 9998
 imageServerPort = 9999
@@ -18,13 +20,18 @@ def searchResult():
 @app.route("/getResult/<file_name>", methods=['GET'])
 def getResult(file_name):
     directory = "/home/fusong/DataImage/searchBTResult/"
-    try:
-        response = make_response(
-            send_from_directory(directory, file_name, as_attachment=True))
-        print(response)
-        return response
+    
+    while not os.path.exists(directory+file_name):
+        time.sleep(1)
+    #try:
+    response = make_response(
+        send_from_directory(directory, file_name, as_attachment=True))
+    print(response)
+    return response
+    '''
     except Exception as e:
         return jsonify({"code": "异常", "message": "{}".format(e)})
+    '''
 
 @app.route("/getImage/<file_name>", methods=['GET'])
 def getImage(file_name):
