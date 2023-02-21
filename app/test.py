@@ -32,7 +32,7 @@ def getResult(file_name):
 
 @app.route("/getImage/<file_name>", methods=['GET'])
 def getImage(file_name):
-    directory = "/home/fusong/DataImage/test2/"
+    directory = "/home/fusong/DataImage/test3/"
     return send_file(directory+file_name, mimetype='image/gif')
 
 @app.route("/searchByImage", methods=['POST'])

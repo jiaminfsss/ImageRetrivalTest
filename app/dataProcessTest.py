@@ -27,7 +27,7 @@ db = pymysql.connect(host = '127.0.0.1',
 cursor = db.cursor()
 
 #载入之前训练好的Faiss索引
-index = faiss.read_index('/home/fusong/DataImage/index_test')
+index = faiss.read_index('/home/fusong/DataImage/index_test3')
 
 while (1):
     print("等待通讯……………………")
@@ -58,7 +58,7 @@ while (1):
         #将搜索结果存储，以便于前端展示
         imageResultList=[]
         for i in image_id[0]:
-            sql = 'SELECT * FROM id_name WHERE image_id="'+str(i)+'";'
+            sql = 'SELECT * FROM Image_id_name_test3 WHERE image_id="'+str(i)+'";'
             cursor.execute(sql)
             imageResultList.append(cursor.fetchone()[1])
             #print(cursor.fetchone())
@@ -88,7 +88,7 @@ while (1):
         #将搜索结果存储，以便于前端展示
         imageResultList=[]
         for i in image_id[0]:
-            sql = 'SELECT * FROM id_name WHERE image_id="'+str(i)+'";'
+            sql = 'SELECT * FROM Image_id_name_test3 WHERE image_id="'+str(i)+'";'
             cursor.execute(sql)
             imageResultList.append(cursor.fetchone()[1])
             #print(cursor.fetchone())
