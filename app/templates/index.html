@@ -31,11 +31,10 @@
                                 </form>
                             </div>
                             <div class="tab-pane" role="tabpanel" id="tab-4">
-                                <p style="color: var(--bs-gray-500);">当前上传的图片为：
-                                    <input type="text" placeholder="请上传图片" style="height: 38px;padding-top: 0px;padding-bottom: 4px;" disabled="" readonly="">
-                                    <button class="btn btn-primary" type="button" style="background: var(--bs-gray-dark);border-color: var(--bs-gray-dark);">上传图片</button>
-                                    <button class="btn btn-primary" type="button" style="background: var(--bs-gray-dark);border-color: var(--bs-gray-dark);">搜索</button>
-                                </p>
+                                <form action="{{url_for('searchByImage')}}" method="post" enctype="multipart/form-data">
+                                    <input class="btn btn-primary"type="file" name="searchImage" style="background: var(--bs-gray-800);border-color: var(--bs-gray-dark);letter-spacing: 0px;">
+                                    <input class="btn btn-primary" type="submit" value="搜索" style="background: var(--bs-gray-800);border-color: var(--bs-gray-dark);letter-spacing: 0px;">
+                                </form>
                             </div>
                         </div>
                     </div>

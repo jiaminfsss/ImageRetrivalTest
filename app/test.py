@@ -23,6 +23,7 @@ def getResult(file_name):
     
     while not os.path.exists(directory+file_name):
         time.sleep(1)
+        #pass
     #try:
     response = make_response(
         send_from_directory(directory, file_name, as_attachment=True))
@@ -37,7 +38,16 @@ def getResult(file_name):
 def getImage(file_name):
     directory = "/home/fusong/DataImage/test2/"
     return send_file(directory+file_name, mimetype='image/gif')
-    
+
+@app.route("/searchByImage", methods=['POST'])
+def searchByImage():
+    img = request.files.get('searchImage')
+    suffix = '.' + img.filename.split('.')[-1] # 获取文件后缀名
+    basedir = '/home/fusong/DataImage/upload/'
+    image_name = str(int(time.time()))+suffix
+    image_path = basedir+image_name
+    img.save(image_path)
+
 @app.route("/searchByText", methods=['POST'])
 def searchByText():
     searchText = request.form['searchText']

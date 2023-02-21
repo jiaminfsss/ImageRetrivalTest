@@ -4,6 +4,8 @@ import torch
 import clip       
 from PIL import Image
 import json
+import faiss
+import pymysql
 
 #socket通信设置
 imageProcess_server = socket(AF_INET,SOCK_STREAM)
@@ -12,16 +14,20 @@ imageProcess_server.bind(address)
 
 imagePath = '/home/fusong/DataImage/test2/'
 
-
 #载入模型
 device = "cuda" if torch.cuda.is_available() else "cpu"
 model, preprocess = clip.load("ViT-B/32", device=device)
 
+#连接数据库
+db = pymysql.connect(host = '127.0.0.1',
+                     user = 'fsjm',
+                     password = '123456',
+                     database = 'Image_id_name')
+#创建数据库游标对象cursor
+cursor = db.cursor()
 
-#遍历图片
-def getImage(imagePath):
-    files_list = os.listdir(path = imagePath)
-    return files_list
+#载入之前训练好的Faiss索引
+index = faiss.read_index('/home/fusong/DataImage/index_test')
 
 while (1):
     print("等待通讯……………………")
@@ -34,44 +40,27 @@ while (1):
     send_data = client_socket.send(str(clientAddr[1]).encode("gbk"))
     client_socket.close()
     
-    
     #模型处理图片和文字
-    text = clip.tokenize([searchText, "a diagram", "a car", "a rabbit"]).to(device)
+    text = clip.tokenize([searchText]).to(device)
     text_features = model.encode_text(text)
-    imageList = getImage(imagePath)#得到图片库中的图片List
+    text_features_np = text_features.cpu().detach().numpy().astype('float32')
+    #归一化以用于计算余弦相似度
+    faiss.normalize_L2(text_features_np)
     
-    '''
-    with open("/home/fusong/DataImage/searchBTResult/"
-              +searchText+str(clientAddr[1])+".json", 'w') as f:
-        f.write("[")
-        count = 0
-        for i in imageList:
-            image = preprocess(Image.open(imagePath+i)).unsqueeze(0).to(device)
-            with torch.no_grad():
-                image_features = model.encode_image(image)
-                logits_per_image, logits_per_text = model(image, text)
-                probs = logits_per_image.softmax(dim=-1).cpu().numpy()
-                if (probs[0][0]>0.8):
-                    print("Label of image "+i+" probs:", probs[0][0])
-                    if(count == 1):
-                        f.write(", \""+i+"\"")
-                    else:
-                        f.write(" \""+i+"\"")
-                        count = 1
-        f.write(" ]")
-        f.close()
-        '''
+    #检索k近邻
+    k = 10
+    dis, image_id = index.search(text_features_np,k)
+    #将搜索结果存储，以便于前端展示
     imageResultList=[]
-    for i in imageList:
-        image = preprocess(Image.open(imagePath+i)).unsqueeze(0).to(device)
-        with torch.no_grad():
-            image_features = model.encode_image(image)
-            logits_per_image, logits_per_text = model(image, text)
-            probs = logits_per_image.softmax(dim=-1).cpu().numpy()
-            if (probs[0][0]>0.8):
-                print("Label of image "+i+" probs:", probs[0][0])
-                imageResultList.append(i)
+    for i in image_id[0]:
+        sql = 'SELECT * FROM id_name WHERE image_id="'+str(i)+'";'
+        cursor.execute(sql)
+        imageResultList.append(cursor.fetchone()[1])
+        #print(cursor.fetchone())
+    #将结果转换成json格式
     imageResultList_json = json.dumps(imageResultList,ensure_ascii=False)
+        
+    #将搜索结果保存在文件中
     with open("/home/fusong/DataImage/searchBTResult/"
               +searchText+str(clientAddr[1])+".json", 'w') as f:
         f.write(imageResultList_json)
