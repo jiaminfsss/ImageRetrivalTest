@@ -29,10 +29,6 @@ def getResult(file_name):
         send_from_directory(directory, file_name, as_attachment=True))
     print(response)
     return response
-    '''
-    except Exception as e:
-        return jsonify({"code": "异常", "message": "{}".format(e)})
-    '''
 
 @app.route("/getImage/<file_name>", methods=['GET'])
 def getImage(file_name):
@@ -46,7 +42,22 @@ def searchByImage():
     basedir = '/home/fusong/DataImage/upload/'
     image_name = str(int(time.time()))+suffix
     image_path = basedir+image_name
+    #保存图片至服务器指定文件夹
     img.save(image_path)
+    sendMessage = ['1']
+    sendMessage.append(image_name)
+    print("当前搜索的图片是："+image_name)
+    sendSocket = socket(AF_INET,SOCK_STREAM)
+    sendSocket.connect(('',imageServerPort))
+    sendMessage_json = json.dumps(sendMessage)
+    sendSocket.send(bytes(sendMessage_json.encode('utf-8')))
+    portNum = sendSocket.recv(1024).decode("gbk")
+    print("从服务器接收到的数据是："+portNum)
+    sendSocket.close()
+    return render_template('searchResult.html', 
+                           filenameToSave=image_name, 
+                           communicatePort=portNum
+                           )
 
 @app.route("/searchByText", methods=['POST'])
 def searchByText():
@@ -54,12 +65,15 @@ def searchByText():
     print("当前搜索的图片是："+searchText)
     sendSocket = socket(AF_INET,SOCK_STREAM)
     sendSocket.connect(('',imageServerPort))
-    sendSocket.send(searchText.encode("gbk"))
+    sendMessage = ['0']
+    sendMessage.append(searchText)
+    sendMessage_json = json.dumps(sendMessage)
+    sendSocket.send(bytes(sendMessage_json.encode('utf-8')))
     portNum = sendSocket.recv(1024).decode("gbk")
     print("从服务器接收到的数据是："+portNum)
     sendSocket.close()
     return render_template('searchResult.html', 
-                           searchText=searchText, 
+                           filenameToSave=searchText, 
                            communicatePort=portNum
                            )
 
