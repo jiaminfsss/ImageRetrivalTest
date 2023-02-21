@@ -38,6 +38,7 @@ def getImage(file_name):
 @app.route("/searchByImage", methods=['POST'])
 def searchByImage():
     img = request.files.get('searchImage')
+    kNeighbor = request.form['kNeighbor']
     suffix = '.' + img.filename.split('.')[-1] # 获取文件后缀名
     basedir = '/home/fusong/DataImage/upload/'
     image_name = str(int(time.time()))+suffix
@@ -46,6 +47,7 @@ def searchByImage():
     img.save(image_path)
     sendMessage = ['1']
     sendMessage.append(image_name)
+    sendMessage.append(kNeighbor)
     print("当前搜索的图片是："+image_name)
     sendSocket = socket(AF_INET,SOCK_STREAM)
     sendSocket.connect(('',imageServerPort))
@@ -62,11 +64,13 @@ def searchByImage():
 @app.route("/searchByText", methods=['POST'])
 def searchByText():
     searchText = request.form['searchText']
+    kNeighbor = request.form['kNeighbor']
     print("当前搜索的图片是："+searchText)
     sendSocket = socket(AF_INET,SOCK_STREAM)
     sendSocket.connect(('',imageServerPort))
     sendMessage = ['0']
     sendMessage.append(searchText)
+    sendMessage.append(kNeighbor)
     sendMessage_json = json.dumps(sendMessage)
     sendSocket.send(bytes(sendMessage_json.encode('utf-8')))
     portNum = sendSocket.recv(1024).decode("gbk")

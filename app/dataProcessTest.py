@@ -53,7 +53,7 @@ while (1):
         faiss.normalize_L2(text_features_np)
         
         #检索k近邻
-        k = 10
+        k = int(receiveMessage[2])
         dis, image_id = index.search(text_features_np,k)
         #将搜索结果存储，以便于前端展示
         imageResultList=[]
@@ -83,7 +83,7 @@ while (1):
         #归一化以用于计算余弦相似度
         faiss.normalize_L2(image_features_np)
         #检索k近邻
-        k = 10
+        k = int(receiveMessage[2])
         dis, image_id = index.search(image_features_np,k)
         #将搜索结果存储，以便于前端展示
         imageResultList=[]

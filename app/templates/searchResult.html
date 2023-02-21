@@ -42,12 +42,16 @@
                         <div class="tab-pane active" role="tabpanel" id="tab-3">
                             <form action="{{url_for('searchByText')}}" method="post">
                                 <input type="text" name="searchText" placeholder="请输入搜索关键词" style="height: 38px;padding-top: 0px;padding-bottom: 4px;">
+                                当前k值为：
+                                <input type="text" name="kNeighbor" placeholder="请输入k的大小（默认值为5）"value="5" style="height: 38px;padding-top: 0px;padding-bottom: 4px;">
                                 <input class="btn btn-primary" type="submit" value="搜索" style="background: var(--bs-gray-800);border-color: var(--bs-gray-dark);letter-spacing: 0px;">
                             </form>
                         </div>
                         <div class="tab-pane" role="tabpanel" id="tab-4">
                             <form action="{{url_for('searchByImage')}}" method="post" enctype="multipart/form-data">
                                 <input class="btn btn-primary"type="file" name="searchImage" style="background: var(--bs-gray-800);border-color: var(--bs-gray-dark);letter-spacing: 0px;">
+                                当前k值为：
+                                <input type="text" name="kNeighbor" placeholder="请输入k的大小（默认值为5）"value="5" style="height: 38px;padding-top: 0px;padding-bottom: 4px;">
                                 <input class="btn btn-primary" type="submit" value="搜索" style="background: var(--bs-gray-800);border-color: var(--bs-gray-dark);letter-spacing: 0px;">
                             </form>
                         </div>
